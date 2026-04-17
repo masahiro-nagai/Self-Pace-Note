@@ -29,7 +29,7 @@
         </p>
         <div class="hero-actions">
           <a class="primary-btn" href="#today">今日の1レップをつくる</a>
-          <a class="ghost-btn" href="#system">Google Cloud の使い道を見る</a>
+          <a class="ghost-btn" href="#review">今週のふり返りを見る</a>
         </div>
       </div>
 
@@ -226,7 +226,7 @@
       </div>
     </section>
 
-    <section class="panel reveal">
+    <section id="review" class="panel reveal">
       <div class="section-heading">
         <p class="eyebrow">Review</p>
         <h2>自分との対話を見える化する</h2>
@@ -276,42 +276,6 @@
           <div id="review-output" class="review-output">
             <p>ログがたまると、ここに今週の自分比と歩幅をまとめます。Cloud Run をつなぐと AI 版レビューに切り替わります。</p>
           </div>
-        </article>
-      </div>
-    </section>
-
-    <section id="system" class="panel reveal">
-      <div class="section-heading">
-        <p class="eyebrow">Cloud Design</p>
-        <h2>Google Cloud クレジットの使い道</h2>
-        <p class="section-copy">
-          まずは静的フロントで MVP を回し、必要になったところから Cloud Run と Vertex AI を足していくのが無理のない進め方です。
-        </p>
-      </div>
-
-      <div class="system-grid">
-        <article class="card system-card">
-          <h3>おすすめ構成</h3>
-          <ul class="system-list">
-            <li><strong>フロント:</strong> まずはこの静的ページ。将来は Cloud Storage か Firebase Hosting へ移行してもよい</li>
-            <li><strong>Cloud Run:</strong> チャレンジ生成、週次レビュー、将来の認証付き API の入口</li>
-            <li><strong>Vertex AI / Gemini:</strong> 文脈に合わせた挑戦提案と、自分比レビューの要約</li>
-            <li><strong>Firestore:</strong> 日次ログ、ユーザー設定、前進 / 後退を含む状態の保存</li>
-            <li><strong>BigQuery:</strong> 自分比の変化や継続のパターン分析、あとからプロダクト改善に使う</li>
-          </ul>
-        </article>
-
-        <article class="card system-card">
-          <h3>この MVP の伸ばし方</h3>
-          <ol class="system-list ordered">
-            <li>今はローカル保存で使い勝手を検証する</li>
-            <li>Cloud Run API を立てて、AI コーチを接続する</li>
-            <li>Firestore にログを保存し、端末をまたいで使えるようにする</li>
-            <li>BigQuery で「継続に効く挑戦の型」を見つける</li>
-          </ol>
-          <p class="helper-text">
-            詳しい構成メモは <code>BEGINNER_LOOP_ARCHITECTURE.md</code> に追加してあります。
-          </p>
         </article>
       </div>
     </section>
