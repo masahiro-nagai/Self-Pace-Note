@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Own Pace Loop</title>
+  <meta
+    name="description"
+    content="Own Pace Loop の GitHub Pages ルートページです。自分比で歩幅を積み重ねるアプリへ移動します。"
+  >
+  <meta http-equiv="refresh" content="0; url=./beginner-loop.html">
+  <link rel="canonical" href="./beginner-loop.html">
+  <style>
+    :root {
+      --primary: #1A73E8;
+      --background: #FFFFFF;
+      --surface: #F8F9FA;
+      --text: #202124;
+      --muted: #5F6368;
+      --border: #E8EAED;
+      --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      --radius-card: 12px;
+      --radius-button: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: var(--background);
+      color: var(--text);
+      font-family: "Noto Sans JP", Inter, sans-serif;
+      font-size: 16px;
+      line-height: 1.75;
+    }
+
+    .card {
+      width: min(560px, 100%);
+      padding: 32px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0 0 16px;
+      color: var(--text);
+      font-size: 32px;
+      line-height: 1.4;
+    }
+
+    p {
+      margin: 0 0 16px;
+      color: var(--muted);
+    }
+
+    a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 120px;
+      min-height: 48px;
+      padding: 12px 24px;
+      border: 1px solid var(--primary);
+      border-radius: var(--radius-button);
+      background: var(--primary);
+      color: var(--background);
+      text-decoration: none;
+      font-weight: 700;
+    }
+  </style>
+  <script>
+    window.location.replace("./beginner-loop.html" + window.location.search + window.location.hash);
+  </script>
+</head>
+<body>
+  <main class="card">
+    <p class="eyebrow">Own Pace Loop</p>
+    <h1>アプリを開いています</h1>
+    <p>GitHub Pages のルートから、<strong>Own Pace Loop</strong> 本体へ移動します。</p>
+    <p>自動で移動しない場合は、下のボタンから開いてください。</p>
+    <a href="./beginner-loop.html">アプリを開く</a>
+  </main>
+</body>
+</html>
