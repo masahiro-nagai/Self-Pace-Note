@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Own Pace Loop | 自分比で積み重ねる習慣</title>
+  <meta
+    name="description"
+    content="他人ではなく自分との比較を大切にしながら、前進も後退も含めて積み重ねていくためのシングルページアプリ。ローカルでも動き、Cloud Run と Vertex AI にも接続できます。"
+  >
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+JP:wght@400;500;700;800&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="./beginner-loop.css">
+</head>
+<body>
+  <main class="page-shell">
+    <header class="hero reveal">
+      <div class="hero-copy">
+        <p class="eyebrow">Own Pace Loop</p>
+        <h1>自分比で、<br>歩幅を積み重ねる。</h1>
+        <p class="hero-text">
+          このアプリは、<strong>他人と比べるため</strong>ではなく、
+          <strong>昨日までの自分と向き合い、自認し、肯定しながら積み重ねる</strong>ための習慣を作ります。
+          前に進む日も、一歩引く日も、どちらも自分の歩幅として残していきます。
+        </p>
+        <div class="hero-actions">
+          <a class="primary-btn" href="#today">今日の1レップをつくる</a>
+          <a class="ghost-btn" href="#system">Google Cloud の使い道を見る</a>
+        </div>
+      </div>
+
+      <aside class="hero-panel">
+        <div class="panel-badge">習慣の設計原則</div>
+        <ul class="principles-list">
+          <li>他人ではなく、前の自分と比べる</li>
+          <li>前進も後退も、その時の自分に必要な選択として残す</li>
+          <li>大きな成果より、小さな積み重ねを肯定する</li>
+        </ul>
+
+        <div class="metrics-grid">
+          <article class="metric-card">
+            <span class="metric-label">アプリ名</span>
+            <strong>Own Pace Loop</strong>
+          </article>
+          <article class="metric-card">
+            <span class="metric-label">今日の内側</span>
+            <strong id="hero-focus-label">今日の一歩</strong>
+          </article>
+          <article class="metric-card">
+            <span class="metric-label">現在モード</span>
+            <strong id="hero-mode-label">Inner Coach</strong>
+          </article>
+          <article class="metric-card">
+            <span class="metric-label">比較軸</span>
+            <strong>自分比で進む</strong>
+          </article>
+        </div>
+      </aside>
+    </header>
+
+    <section id="today" class="panel reveal">
+      <div class="section-heading">
+        <p class="eyebrow">Today</p>
+        <h2>今日の自分に合う一歩を整える</h2>
+        <p class="section-copy">
+          ローカルだけでも動きます。Cloud Run API URL を入れると、Vertex AI を使ったパーソナライズ生成に切り替えられます。
+        </p>
+      </div>
+
+      <div class="today-grid">
+        <article class="card control-card">
+          <label for="focus-area">いま伸ばしたい領域</label>
+          <input id="focus-area" type="text" placeholder="例: 発信、営業、英語、採用、プロダクトづくり">
+
+          <label for="social-context">この一歩を出したい場面</label>
+          <input id="social-context" type="text" placeholder="例: X、社内ミーティング、顧客との会話、友人との対話">
+
+          <div class="label-row">
+            <label>レップの種類</label>
+            <span class="field-note">複数選択できます</span>
+          </div>
+          <div id="category-pills" class="pill-grid" role="group" aria-label="レップの種類">
+            <button class="pill is-active" type="button" data-category="question">素直に聞く</button>
+            <button class="pill is-active" type="button" data-category="draft">未完成を見せる</button>
+            <button class="pill" type="button" data-category="feedback">フィードバックを取る</button>
+            <button class="pill" type="button" data-category="public">人前で初心者になる</button>
+            <button class="pill" type="button" data-category="experiment">新しい型を試す</button>
+          </div>
+
+          <div class="label-row">
+            <label for="intensity">恥ずかしさの強度</label>
+            <span id="intensity-label" class="field-note">3 / 5: 少しだけ心拍数が上がる</span>
+          </div>
+          <input id="intensity" type="range" min="1" max="5" value="3">
+
+          <label for="api-url">Cloud Run API URL（任意）</label>
+          <input id="api-url" type="url" placeholder="https://your-service.run.app">
+          <p class="helper-text">
+            ここを設定すると、<code>POST /api/challenge</code> と <code>POST /api/weekly-review</code> を呼びます。
+            未設定ならローカル生成にフォールバックします。
+          </p>
+
+          <div class="action-row">
+            <button id="generate-btn" class="primary-btn" type="button">今日の一歩をつくる</button>
+            <button id="surprise-btn" class="ghost-btn" type="button">おまかせで切り替える</button>
+          </div>
+
+          <p id="generator-status" class="status-line">ローカル生成モードです。Cloud Run をつなぐと内省レビューが AI コーチ対応になります。</p>
+        </article>
+
+        <article class="card challenge-card">
+          <div class="challenge-head">
+            <span id="challenge-mode-badge" class="mode-badge">LOCAL</span>
+            <span id="challenge-date" class="challenge-date"></span>
+          </div>
+
+          <h3 id="challenge-title">今日の一歩</h3>
+          <p id="challenge-text" class="challenge-text">
+            小さくて安全だけれど、少しだけ勇気が必要な一歩をここに作ります。
+          </p>
+
+          <div class="challenge-metrics">
+            <div>
+              <span class="mini-label">恥ずかしさ目安</span>
+              <strong id="challenge-shame">5 / 10</strong>
+            </div>
+            <div>
+              <span class="mini-label">狙い</span>
+              <strong id="challenge-purpose">初心者に戻る耐性をつける</strong>
+            </div>
+            <div>
+              <span class="mini-label">クリア条件</span>
+              <strong id="challenge-win">今日の自分に必要な一歩を選べたら達成</strong>
+            </div>
+          </div>
+
+          <div class="label-row compact">
+            <span class="mini-label">実行ステップ</span>
+            <span id="challenge-category" class="category-label">素直に聞く</span>
+          </div>
+          <ol id="challenge-steps" class="step-list">
+            <li>今日はひとつ、知らないことをそのまま聞く</li>
+            <li>分かったふりをしない</li>
+            <li>終わったら感情の変化を記録する</li>
+          </ol>
+
+          <div class="challenge-footer">
+            <p class="challenge-note">
+              メモ: 前に進む日も、一歩引く日も、自分を育てるための選択です。
+            </p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel reveal">
+      <div class="section-heading">
+        <p class="eyebrow">Check-In</p>
+        <h2>やる前とやった後を記録する</h2>
+        <p class="section-copy">
+          他人にどう見えたかではなく、<strong>今日の自分が何を必要としていたか</strong>を見つめるためのログです。
+        </p>
+      </div>
+
+      <div class="checkin-grid">
+        <article class="card form-card">
+          <div class="label-row">
+            <label>今日の状態</label>
+            <span class="field-note">前進も後退も、そのまま残します</span>
+          </div>
+          <div id="status-group" class="segmented" role="group" aria-label="今日の状態">
+            <button class="segment is-active" type="button" data-status="planned">これから</button>
+            <button class="segment" type="button" data-status="done">進めた</button>
+            <button class="segment" type="button" data-status="grounded">整えた</button>
+            <button class="segment" type="button" data-status="retreated">一歩引いた</button>
+          </div>
+
+          <div class="range-block">
+            <div class="label-row">
+              <label for="fear-before">やる前の怖さ</label>
+              <span id="fear-before-label" class="field-note">5 / 10</span>
+            </div>
+            <input id="fear-before" type="range" min="1" max="10" value="5">
+          </div>
+
+          <div class="range-block">
+            <div class="label-row">
+              <label for="relief-after">終わった後の自己信頼</label>
+              <span id="relief-after-label" class="field-note">6 / 10</span>
+            </div>
+            <input id="relief-after" type="range" min="1" max="10" value="6">
+          </div>
+
+          <label for="action-taken">実際にやったこと</label>
+          <textarea id="action-taken" rows="4" placeholder="例: 社内のデザイナーに『この観点がまだわからないので、初歩から教えてほしい』と聞いた。"></textarea>
+
+          <label for="actual-outcome">実際に起きたこと</label>
+          <textarea id="actual-outcome" rows="4" placeholder="例: 思ったより普通に答えてもらえた。むしろ話が前に進んだ。"></textarea>
+
+          <label for="learning-note">前の自分との違い</label>
+          <textarea id="learning-note" rows="4" placeholder="例: 前なら黙っていた場面で、一言だけ聞けた。今日は一歩引いたけれど、無理しない選択を肯定できた。"></textarea>
+
+          <div class="action-row">
+            <button id="save-log-btn" class="primary-btn" type="button">今日の歩幅を保存する</button>
+          </div>
+          <p id="save-status" class="status-line">まだ保存していません。</p>
+        </article>
+
+        <article class="card summary-card">
+          <div class="summary-head">
+            <div>
+              <p class="eyebrow small">Today Snapshot</p>
+              <h3>今日の記録</h3>
+            </div>
+            <span id="today-status-badge" class="status-badge planned">これから</span>
+          </div>
+
+          <div id="today-summary" class="summary-body">
+            <p>まだ今日のログはありません。まずはひとつ、今日の自分に合う一歩を決めましょう。</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel reveal">
+      <div class="section-heading">
+        <p class="eyebrow">Review</p>
+        <h2>自分との対話を見える化する</h2>
+        <p class="section-copy">
+          他人との比較ではなく、前の 7 日との自分比と、進んだ日も引いた日も含めた歩幅を見える化します。
+        </p>
+      </div>
+
+      <div class="review-grid">
+        <div class="stats-grid">
+          <article class="stat-card">
+            <span class="metric-label">積み重ね日数</span>
+            <strong id="cumulative-days">0日</strong>
+          </article>
+          <article class="stat-card">
+            <span class="metric-label">前の7日との自分比</span>
+            <strong id="self-delta">±0日</strong>
+          </article>
+          <article class="stat-card">
+            <span class="metric-label">整える / 引く日</span>
+            <strong id="restore-days">0日</strong>
+          </article>
+          <article class="stat-card">
+            <span class="metric-label">平均の自己信頼</span>
+            <strong id="avg-trust">0 / 10</strong>
+          </article>
+        </div>
+
+        <article class="card history-card">
+          <div class="summary-head">
+            <div>
+              <p class="eyebrow small">Last 7 Days</p>
+              <h3>最近の歩幅</h3>
+            </div>
+          </div>
+          <div id="history-list" class="history-list"></div>
+        </article>
+
+        <article class="card review-card">
+          <div class="summary-head">
+            <div>
+              <p class="eyebrow small">Weekly Note</p>
+              <h3>今週のふり返り</h3>
+            </div>
+            <button id="review-btn" class="ghost-btn" type="button">レビューを作る</button>
+          </div>
+          <div id="review-output" class="review-output">
+            <p>ログがたまると、ここに今週の自分比と歩幅をまとめます。Cloud Run をつなぐと AI 版レビューに切り替わります。</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="system" class="panel reveal">
+      <div class="section-heading">
+        <p class="eyebrow">Cloud Design</p>
+        <h2>Google Cloud クレジットの使い道</h2>
+        <p class="section-copy">
+          まずは静的フロントで MVP を回し、必要になったところから Cloud Run と Vertex AI を足していくのが無理のない進め方です。
+        </p>
+      </div>
+
+      <div class="system-grid">
+        <article class="card system-card">
+          <h3>おすすめ構成</h3>
+          <ul class="system-list">
+            <li><strong>フロント:</strong> まずはこの静的ページ。将来は Cloud Storage か Firebase Hosting へ移行してもよい</li>
+            <li><strong>Cloud Run:</strong> チャレンジ生成、週次レビュー、将来の認証付き API の入口</li>
+            <li><strong>Vertex AI / Gemini:</strong> 文脈に合わせた挑戦提案と、自分比レビューの要約</li>
+            <li><strong>Firestore:</strong> 日次ログ、ユーザー設定、前進 / 後退を含む状態の保存</li>
+            <li><strong>BigQuery:</strong> 自分比の変化や継続のパターン分析、あとからプロダクト改善に使う</li>
+          </ul>
+        </article>
+
+        <article class="card system-card">
+          <h3>この MVP の伸ばし方</h3>
+          <ol class="system-list ordered">
+            <li>今はローカル保存で使い勝手を検証する</li>
+            <li>Cloud Run API を立てて、AI コーチを接続する</li>
+            <li>Firestore にログを保存し、端末をまたいで使えるようにする</li>
+            <li>BigQuery で「継続に効く挑戦の型」を見つける</li>
+          </ol>
+          <p class="helper-text">
+            詳しい構成メモは <code>BEGINNER_LOOP_ARCHITECTURE.md</code> に追加してあります。
+          </p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <script src="./beginner-loop.js"></script>
+</body>
+</html>
